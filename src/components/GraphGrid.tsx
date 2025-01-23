@@ -1,10 +1,18 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
+import GridLabels from "./GridLabels";
 
 const GraphGrid: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  //   const [labels, setLabels] = useState<
-  //     { x: number; y: number; label: string }[]
-  //   >([]);
+  const [canvasSize, setCanvasSize] = useState({ width: 1800, height: 1800 });
+
+  const labelPositions = useMemo(() => {
+    const positions: { x: number; y: number; label: string }[] = [];
+    for (let i = 100; i <= canvasSize.width; i += 100) {
+      positions.push({ x: i, y: 0, label: `${i}` }); // X-axis labels
+      positions.push({ x: 0, y: i, label: `${i}` }); // Y-axis labels
+    }
+    return positions;
+  }, [canvasSize.width]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,18 +21,16 @@ const GraphGrid: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const canvasWidth = 1800;
-    const canvasHeight = 1800;
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
     const gridSpacing = 10;
     const normalLineColor = "rgb(238, 238, 238)";
     const highlightLineColor = "darkgray";
 
+    ctx.lineWidth = 1;
+
     const drawGrid = () => {
       const { width, height } = canvas;
 
+      // Clear only the canvas area that needs updating
       ctx.clearRect(0, 0, width, height);
 
       // Draw vertical lines
@@ -32,11 +38,8 @@ const GraphGrid: React.FC = () => {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
-
-        // highlight every 10th line
         ctx.strokeStyle =
           x % (gridSpacing * 10) === 0 ? highlightLineColor : normalLineColor;
-
         ctx.stroke();
       }
 
@@ -45,22 +48,20 @@ const GraphGrid: React.FC = () => {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
-
-        // highlight every 10th line
         ctx.strokeStyle =
           y % (gridSpacing * 10) === 0 ? highlightLineColor : normalLineColor;
-
         ctx.stroke();
       }
     };
 
     drawGrid();
 
-    // Redraw grid on window resize
+    // Redraw grid on window resize using requestAnimationFrame
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      drawGrid();
+      setCanvasSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     };
 
     window.addEventListener("resize", handleResize);
@@ -69,48 +70,14 @@ const GraphGrid: React.FC = () => {
     };
   }, []);
 
-  // Create labels after every 100th line
-  useEffect(() => {
-    const generateLabels = () => {
-      const labelsList: { x: number; y: number; label: string }[] = [];
-      for (let i = 100; i <= 1800; i += 100) {
-        // Start at 100 to skip 0
-        labelsList.push({ x: i, y: 0, label: `${i}` }); // X-axis labels
-        labelsList.push({ x: 0, y: i, label: `${i}` }); // Y-axis labels
-      }
-      //   setLabels(labelsList);
-    };
-
-    generateLabels();
-  }, []);
-
   return (
-    <div style={{ position: "relative" }}>
-      <canvas ref={canvasRef} style={{ border: "1px solid #ccc", zIndex: 1 }} />
-      {/* <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
-      >
-        {labels.map((label, index) => (
-          <div
-            key={index}
-            style={{
-              position: "absolute",
-              left: `${label.x + 5}px`, // Position the label slightly to the right of the grid lines
-              top: `${label.y + 5}px`, // Position the label slightly below the grid lines
-              color: "darkgray",
-              fontSize: "12px",
-            }}
-          >
-            {label.label}
-          </div>
-        ))}
-      </div> */}
+    <div>
+      <canvas
+        ref={canvasRef}
+        width={canvasSize.width}
+        height={canvasSize.height}
+      />
+      <GridLabels labels={labelPositions} />
     </div>
   );
 };
