@@ -1,0 +1,91 @@
+.horizontalMarker {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  min-width: 0px;
+  transition: all 0.5s ease-out;
+}
+
+.verticalMarker {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transition: all 0.5s ease-out;
+}
+
+.horizontalBody {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.verticalBody {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.verticalLine {
+  width: 2px;
+  background-color: rgba(72, 61, 139, 0.5);
+  flex-grow: 1;
+}
+
+.horizontalLine {
+  height: 2px;
+  background-color: rgba(72, 61, 139, 0.5);
+  flex-grow: 1;
+}
+
+/* Element: arrow, Modifier: left */
+.arrowLeft {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid rgba(72, 61, 139, 0.5);
+}
+
+/* Element: arrow, Modifier: right */
+.arrowRight {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid rgba(72, 61, 139, 0.5);
+}
+
+/* Element: arrow, Modifier: up */
+.arrowUp {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid rgba(72, 61, 139, 0.5);
+}
+
+/* Element: arrow, Modifier: down */
+.arrowDown {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rgba(72, 61, 139, 0.5);
+}
+
+.markerLabel {
+  color: rgb(72, 61, 139);
+  font-weight: 500;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}

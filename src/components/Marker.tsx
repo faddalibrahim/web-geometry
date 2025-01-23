@@ -1,0 +1,45 @@
+import styles from "../css/HorizontalMarker.module.css";
+
+interface MarkerProps {
+  mRef: React.RefObject<HTMLDivElement>;
+  label: string;
+  orientation: string;
+}
+
+export default function Marker({ mRef, label, orientation }: MarkerProps) {
+  const HORIZONTAL = "horizontal";
+  return (
+    <div
+      className={
+        orientation === HORIZONTAL
+          ? styles.horizontalMarker
+          : styles.verticalMarker
+      }
+      ref={mRef}
+    >
+      <div className={styles.xMarkerBody}>
+        {orientation === HORIZONTAL ? (
+          <div className={styles.arrowLeft} />
+        ) : (
+          <div className={styles.arrowUp} />
+        )}
+        <div
+          className={
+            orientation === HORIZONTAL
+              ? styles.horizontalLine
+              : styles.verticalLine
+          }
+        />
+        {orientation === HORIZONTAL ? (
+          <div className={styles.arrowRight} />
+        ) : (
+          <div className={styles.arrowDown} />
+        )}
+      </div>
+      <div className={styles.markerLabel}>
+        <p> {label} </p>
+        <small>0</small>
+      </div>
+    </div>
+  );
+}
