@@ -1,10 +1,10 @@
-import "./App.css";
+import GraphGrid from "./components/GraphGrid";
 
 function App() {
   return (
-    <>
-      <h1>Bozo</h1>
-    </>
+    <div>
+      <GraphGrid />
+    </div>
   );
 }
 
