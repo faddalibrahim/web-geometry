@@ -1,4 +1,4 @@
-import styles from "../css/HorizontalMarker.module.css";
+import styles from "../css/Marker.module.css";
 
 interface MarkerProps {
   mRef: React.RefObject<HTMLDivElement>;
@@ -17,7 +17,13 @@ export default function Marker({ mRef, label, orientation }: MarkerProps) {
       }
       ref={mRef}
     >
-      <div className={styles.xMarkerBody}>
+      <div
+        className={
+          orientation === HORIZONTAL
+            ? styles.horizontalBody
+            : styles.verticalBody
+        }
+      >
         {orientation === HORIZONTAL ? (
           <div className={styles.arrowLeft} />
         ) : (
