@@ -1,0 +1,14 @@
+.box {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  background-color: var(--box-color);
+  position: absolute;
+  top: calc(50% + 5px);
+  left: calc(50% + 7px);
+  border-radius: 4px;
+  transition: all 0.5s ease-out;
+  cursor: move;
+  color: white;
+  text-align: center;
+}
