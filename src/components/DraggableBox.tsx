@@ -1,110 +1,114 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import Marker from "./Marker";
 import styles from "../css/DraggableBox.module.css";
 
-interface DraggableBoxProps {}
-
-const DraggableBox: React.FC<DraggableBoxProps> = ({}) => {
+const DraggableBox: React.FC = () => {
   const boxRef = useRef<HTMLDivElement>(null);
   const xMarkerRef = useRef<HTMLDivElement>(null);
   const yMarkerRef = useRef<HTMLDivElement>(null);
   const HORIZONTAL = "horizontal";
   const VERTICAL = "vertical";
 
-  const handleMouseDownRef = useRef<(event: MouseEvent) => void>();
-
-  // for box tracking
   const lastLeftRef = useRef(0);
   const lastTopRef = useRef(0);
-
-  // for mouse tracking
   const startingXRef = useRef(0);
   const startingYRef = useRef(0);
 
-  function moved(event: MouseEvent) {
-    if (event.buttons === 0) {
-      window.removeEventListener("mousemove", moved);
-    } else {
-      if (boxRef.current && startingXRef.current) {
-        const distX = event.clientX - startingXRef.current;
-        const distY = event.clientY - startingYRef.current;
+  // Add state for x and y values
+  const [xValue, setXValue] = useState(0);
+  const [yValue, setYValue] = useState(0);
 
-        const newLeft = lastLeftRef.current + distX;
-        const newTop = lastTopRef.current + distY;
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    if (boxRef.current && xMarkerRef.current && yMarkerRef.current) {
+      const distX = event.clientX - startingXRef.current;
+      const distY = event.clientY - startingYRef.current;
 
-        boxRef.current.style.left = newLeft + "px";
-        boxRef.current.style.top = newTop + "px";
+      const newLeft = lastLeftRef.current + distX;
+      const newTop = lastTopRef.current + distY;
 
-        xMarkerRef.current.style.width = newLeft + "px";
-        xMarkerRef.current.style.top = newTop + "px";
+      boxRef.current.style.left = `${newLeft}px`;
+      boxRef.current.style.top = `${newTop}px`;
 
-        yMarkerRef.current.style.height = newTop + "px";
-        yMarkerRef.current.style.left = newLeft + "px";
-      }
+      xMarkerRef.current.style.width = `${newLeft}px`;
+      xMarkerRef.current.style.top = `${newTop}px`;
+
+      yMarkerRef.current.style.height = `${newTop}px`;
+      yMarkerRef.current.style.left = `${newLeft}px`;
+
+      setXValue(newLeft);
+      setYValue(newTop);
     }
-  }
+  }, []);
 
-  function init() {
+  const handleMouseDown = useCallback(
+    (event: MouseEvent) => {
+      if (event.button === 0 && boxRef.current) {
+        const { top, left } = boxRef.current.getBoundingClientRect();
+
+        startingXRef.current = event.clientX;
+        startingYRef.current = event.clientY;
+        lastLeftRef.current = left;
+        lastTopRef.current = top;
+
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+        event.preventDefault();
+      }
+    },
+    [handleMouseMove]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("mouseup", handleMouseUp);
+  }, [handleMouseMove]);
+
+  useEffect(() => {
     const box = boxRef.current;
     const xMarker = xMarkerRef.current;
     const yMarker = yMarkerRef.current;
 
     if (box && xMarker && yMarker) {
       const { top, left } = box.getBoundingClientRect();
-      console.log("init", box.getBoundingClientRect());
 
-      lastLeftRef.current = left;
-      lastTopRef.current = top;
+      xMarker.style.top = `${top}px`;
+      xMarker.style.width = `${left}px`;
 
-      xMarker.style.top = `${lastTopRef.current}px`;
-      xMarker.style.width = `${lastLeftRef.current}px`;
+      yMarker.style.left = `${left}px`;
+      yMarker.style.height = `${top}px`;
 
-      yMarker.style.left = `${lastLeftRef.current}px`;
-      yMarker.style.height = `${lastTopRef.current}px`;
-      const handleMouseDown = (event: MouseEvent) => {
-        if (event.button === 0) {
-          startingXRef.current = event.clientX;
-          startingYRef.current = event.clientY;
+      setXValue(left);
+      setYValue(top);
 
-          const { top, left } = box.getBoundingClientRect();
-
-          lastLeftRef.current = left;
-          lastTopRef.current = top;
-
-          //   xMarker.style.top = `${lastTopRef.current}px`;
-          //   yMarker.style.left = `${lastLeftRef.current}px`;
-
-          window.addEventListener("mousemove", moved);
-          event.preventDefault();
-        }
-      };
-
-      handleMouseDownRef.current = handleMouseDown;
       box.addEventListener("mousedown", handleMouseDown);
     }
-  }
-
-  useEffect(() => {
-    init();
 
     return () => {
-      const box = boxRef.current;
-
-      if (box && handleMouseDownRef.current) {
-        box.removeEventListener("mousedown", handleMouseDownRef.current);
+      if (box) {
+        box.removeEventListener("mousedown", handleMouseDown);
       }
-
-      window.removeEventListener("mousemove", moved);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, []);
+  }, [handleMouseDown, handleMouseMove, handleMouseUp]);
 
   return (
     <>
       <div className={styles.box} ref={boxRef}>
         <small>100 x 100</small>
       </div>
-      <Marker mRef={xMarkerRef} label="x / left" orientation={HORIZONTAL} />
-      <Marker mRef={yMarkerRef} label="y / top" orientation={VERTICAL} />
+      <Marker
+        mRef={xMarkerRef}
+        label="x / left"
+        orientation={HORIZONTAL}
+        value={xValue}
+      />
+      <Marker
+        mRef={yMarkerRef}
+        label="y / top"
+        orientation={VERTICAL}
+        value={yValue}
+      />
     </>
   );
 };

@@ -4,9 +4,15 @@ interface MarkerProps {
   mRef: React.RefObject<HTMLDivElement>;
   label: string;
   orientation: string;
+  value: number;
 }
 
-export default function Marker({ mRef, label, orientation }: MarkerProps) {
+export default function Marker({
+  mRef,
+  label,
+  orientation,
+  value,
+}: MarkerProps) {
   const HORIZONTAL = "horizontal";
   return (
     <div
@@ -44,7 +50,7 @@ export default function Marker({ mRef, label, orientation }: MarkerProps) {
       </div>
       <div className={styles.markerLabel}>
         <p> {label} </p>
-        <small>0</small>
+        <small>{value}</small>
       </div>
     </div>
   );
