@@ -1,13 +1,19 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 import Marker from "./Marker";
 import styles from "../css/DraggableBox.module.css";
+import {
+  HORIZONTAL,
+  VERTICAL,
+  MOUSE_DOWN,
+  MOUSE_MOVE,
+  MOUSE_UP,
+} from "../utils/constants";
+import { useSettings } from "../hooks/useSettings";
 
 const DraggableBox: React.FC = () => {
   const boxRef = useRef<HTMLDivElement>(null);
   const xMarkerRef = useRef<HTMLDivElement>(null);
   const yMarkerRef = useRef<HTMLDivElement>(null);
-  const HORIZONTAL = "horizontal";
-  const VERTICAL = "vertical";
 
   const lastLeftRef = useRef(0);
   const lastTopRef = useRef(0);
@@ -80,8 +86,8 @@ const DraggableBox: React.FC = () => {
   );
 
   const handleMouseUp = useCallback(() => {
-    window.removeEventListener("mousemove", handleMouseMove);
-    window.removeEventListener("mouseup", handleMouseUp);
+    window.removeEventListener(MOUSE_MOVE, handleMouseMove);
+    window.removeEventListener(MOUSE_UP, handleMouseUp);
   }, [handleMouseMove]);
 
   useEffect(() => {
@@ -118,43 +124,61 @@ const DraggableBox: React.FC = () => {
 
     return () => {
       if (box) {
-        box.removeEventListener("mousedown", handleMouseDown);
+        box.removeEventListener(MOUSE_DOWN, handleMouseDown);
       }
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener(MOUSE_MOVE, handleMouseMove);
+      window.removeEventListener(MOUSE_UP, handleMouseUp);
     };
   }, [handleMouseDown, handleMouseMove, handleMouseUp]);
 
+  const {
+    boxTransitionDuration,
+    boxTransitionTiming,
+    showDimensionLines,
+    boxColor,
+  } = useSettings();
+
   return (
     <>
-      <div className={styles.box} ref={boxRef}>
+      <div
+        className={styles.box}
+        ref={boxRef}
+        style={{
+          transition: `all ${boxTransitionDuration}ms ${boxTransitionTiming}`,
+          "--box-color": boxColor,
+        }}
+      >
         <small>100 x 100</small>
       </div>
-      <Marker
-        mRef={xMarkerRef}
-        label="x / left"
-        orientation={HORIZONTAL}
-        value={xValue}
-      />
-      <Marker
-        mRef={yMarkerRef}
-        label="y / top"
-        orientation={VERTICAL}
-        value={yValue}
-      />
-
-      <Marker
-        mRef={rMarkerRef}
-        label="right"
-        orientation={HORIZONTAL}
-        value={rValue}
-      />
-      <Marker
-        mRef={bMarkerRef}
-        label="bottom"
-        orientation={VERTICAL}
-        value={bValue}
-      />
+      {showDimensionLines && (
+        <>
+          {" "}
+          <Marker
+            mRef={xMarkerRef}
+            label="x / left"
+            orientation={HORIZONTAL}
+            value={xValue}
+          />
+          <Marker
+            mRef={yMarkerRef}
+            label="y / top"
+            orientation={VERTICAL}
+            value={yValue}
+          />
+          <Marker
+            mRef={rMarkerRef}
+            label="right"
+            orientation={HORIZONTAL}
+            value={rValue}
+          />
+          <Marker
+            mRef={bMarkerRef}
+            label="bottom"
+            orientation={VERTICAL}
+            value={bValue}
+          />
+        </>
+      )}
     </>
   );
 };

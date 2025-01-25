@@ -4,12 +4,13 @@ import { createContext, useState, ReactNode } from "react";
 type SettingsState = {
   canvasBgColor: string;
   showGrid: boolean;
-  horizontalGridLineColor: string;
-  verticalGridLineColor: string;
+  showDimensionLines: boolean;
+  gridLineColor: string;
   highlightedGridLineColor: string;
   dimensionLinesColor: string;
-  gridSize: number;
   boxColor: string;
+  boxTransitionTiming: string;
+  boxTransitionDuration: number;
   updateSettings: (
     key: keyof SettingsState,
     value: string | boolean | number
@@ -20,8 +21,21 @@ const SettingsContext = createContext<SettingsState | undefined>(undefined);
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const [settings, setSettings] = useState({
-    gridSize: 10,
-    boxColor: "blue",
+    canvasBgColor: "#fff",
+    showGrid: true,
+    showDimensionLines: true,
+    gridLineColor: "#eee",
+    highlightedGridLineColor: "darkgray",
+    dimensionLinesColor: "rgba(72, 61, 139, 0.5)",
+    boxColor: "rgba(72, 61, 139, 0.5)",
+    boxTransitionTiming: "ease-in-out",
+    boxTransitionDuration: 200,
+    updateSettings: (
+      key: keyof SettingsState,
+      value: string | boolean | number
+    ) => {
+      setSettings((prev) => ({ ...prev, [key]: value }));
+    },
   });
 
   const updateSettings = (

@@ -1,14 +1,15 @@
 import GraphGrid from "./components/GraphGrid";
 import DraggableBox from "./components/DraggableBox";
+import Settings from "./components/Settings";
+import { SettingsProvider } from "./context/SettingsContext";
 
 function App() {
   return (
-    <div>
+    <SettingsProvider>
       <GraphGrid />
       <DraggableBox />
-      {/* <Settings/> */}
-      {/* <Console/> */}
-    </div>
+      <Settings />
+    </SettingsProvider>
   );
 }
 

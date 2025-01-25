@@ -1,3 +1,8 @@
+:root {
+  --transition: all 0.5s ease-in-out;
+  --line-color: rgba(72, 61, 139, 0.5);
+}
+
 .horizontalMarker {
   display: flex;
   flex-flow: column;
@@ -6,7 +11,7 @@
   left: 0;
   top: 50%;
   min-width: 0px;
-  transition: all 0.5s ease-out;
+  transition: var(--transition);
 }
 
 .verticalMarker {
@@ -15,7 +20,7 @@
   position: absolute;
   left: 50%;
   top: 0;
-  transition: all 0.5s ease-out;
+  transition: var(--transition);
 }
 
 .horizontalBody {
@@ -36,13 +41,13 @@
 
 .verticalLine {
   width: 2px;
-  background-color: rgba(72, 61, 139, 0.5);
+  background-color: var(--line-color);
   flex-grow: 1;
 }
 
 .horizontalLine {
   height: 2px;
-  background-color: rgba(72, 61, 139, 0.5);
+  background-color: var(--line-color);
   flex-grow: 1;
 }
 
@@ -52,7 +57,7 @@
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid rgba(72, 61, 139, 0.5);
+  border-right: 10px solid var(--line-color);
 }
 
 /* Element: arrow, Modifier: right */
@@ -61,7 +66,7 @@
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 10px solid rgba(72, 61, 139, 0.5);
+  border-left: 10px solid var(--line-color);
 }
 
 /* Element: arrow, Modifier: up */
@@ -70,7 +75,7 @@
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid rgba(72, 61, 139, 0.5);
+  border-bottom: 10px solid var(--line-color);
 }
 
 /* Element: arrow, Modifier: down */
@@ -79,7 +84,7 @@
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid rgba(72, 61, 139, 0.5);
+  border-top: 10px solid var(--line-color);
 }
 
 .markerLabel {

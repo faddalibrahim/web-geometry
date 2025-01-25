@@ -1,0 +1,9 @@
+export const EASE_IN = "ease-in";
+export const EASE_OUT = "ease-out";
+export const EASE_IN_OUT = "ease-in-out";
+export const HORIZONTAL = "horizontal";
+export const LINEAR = "linear";
+export const MOUSE_DOWN = "mousedown";
+export const MOUSE_UP = "mouseup";
+export const MOUSE_MOVE = "mousemove";
+export const VERTICAL = "vertical";

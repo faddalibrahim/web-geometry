@@ -39,4 +39,9 @@
 
 :root {
   --box-color: rgba(72, 61, 139, 0.5);
+  --canvas-bg-color: white;
+}
+
+body {
+  background-color: var(--canvas-bg-color);
 }

@@ -1,4 +1,5 @@
 import styles from "../css/Marker.module.css";
+import { useSettings } from "../hooks/useSettings";
 
 interface MarkerProps {
   mRef: React.RefObject<HTMLDivElement>;
@@ -14,6 +15,8 @@ export default function Marker({
   value,
 }: MarkerProps) {
   const HORIZONTAL = "horizontal";
+  const { boxTransitionDuration, boxTransitionTiming, dimensionLinesColor } =
+    useSettings();
   return (
     <div
       className={
@@ -22,6 +25,10 @@ export default function Marker({
           : styles.verticalMarker
       }
       ref={mRef}
+      style={{
+        transition: `all ${boxTransitionDuration}ms ${boxTransitionTiming}`,
+        "--line-color": dimensionLinesColor,
+      }}
     >
       <div
         className={
@@ -50,7 +57,7 @@ export default function Marker({
       </div>
       <div className={styles.markerLabel}>
         <p> {label} </p>
-        <small>{value}</small>
+        <small>{value} px</small>
       </div>
     </div>
   );

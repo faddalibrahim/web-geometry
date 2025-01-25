@@ -1,0 +1,14 @@
+.customColorPicker {
+  label {
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+  }
+}
+
+.colorPreview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+}

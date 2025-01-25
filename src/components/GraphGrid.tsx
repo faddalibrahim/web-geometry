@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import GridLabels from "./GridLabels";
+import { useSettings } from "../hooks/useSettings";
 
 const GraphGrid: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 1800, height: 1800 });
+
+  const { showGrid, gridLineColor, highlightedGridLineColor } = useSettings();
 
   const labelPositions = useMemo(() => {
     const positions: { x: number; y: number; label: string }[] = [];
@@ -16,14 +19,14 @@ const GraphGrid: React.FC = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !showGrid) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const gridSpacing = 10;
-    const normalLineColor = "rgb(238, 238, 238)";
-    const highlightLineColor = "darkgray";
+    const normalLineColor = gridLineColor;
+    const highlightLineColor = highlightedGridLineColor;
 
     ctx.lineWidth = 1;
 
@@ -68,7 +71,9 @@ const GraphGrid: React.FC = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [gridLineColor, highlightedGridLineColor, showGrid]);
+
+  if (!showGrid) return <></>;
 
   return (
     <div>
